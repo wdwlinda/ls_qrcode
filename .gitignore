@@ -6,3 +6,4 @@ data_set
 **/*.jpg
 **/*.pth*
 **/*.ckpt*
+**/*.txt

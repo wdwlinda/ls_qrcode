@@ -34,8 +34,7 @@ def get_args():
     parser.add_argument('--number', '-n', type=int, help='how many images you want to generate')
     parser.add_argument('--size', '-s', type=str, default='(32,120)', help='size range of the qrcode image')
     parser.add_argument('--alpha', '-a', type=str, default='(10,30)', help='value range of the alpha parameter')
-    parser.add_argument('--object_number', '-on', type=str, default='(1,5)',
-                        help='the number of qrcode image in one background image')
+    parser.add_argument('--object_number', '-on', type=str, default='(1,5)', help='the number of qrcode image in one background image')
     parser.add_argument('--shape', type=int, default=256, help='training data shape')
     parser.add_argument('--debug', type=bool, default=False, help='debug mode')
     args = parser.parse_args()
@@ -181,6 +180,7 @@ def generate_training_data(args):
     bg_imgs = ImageLists(args.bg_dir, [args.shape] * 2)
     fg_imgs = ImageLists(args.fg_dir)
     count = 0
+    args.number = len(bg_imgs)
     with tqdm.tqdm(total=args.number) as pbar:
         pbar.set_description('Generating {}/{} sample'.format(count, args.number))
         while True:
@@ -192,7 +192,7 @@ def generate_training_data(args):
             labels = []
             for i in range(np.random.randint(args.object_number[0], args.object_number[1])):
                 # get qrcode image
-                fg_img = fg_imgs[count]
+                fg_img = fg_imgs[np.random.randint(low=0, high=(len(fg_imgs)-1))]
                 fg_img = try_random_resize(fg_img, args.size)
                 bbox = try_random_position(fg_img, [bg_img.shape[1], bg_img.shape[0]], exist_bbox)
 

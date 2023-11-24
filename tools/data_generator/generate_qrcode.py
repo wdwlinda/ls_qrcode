@@ -19,7 +19,7 @@ def get_args():
     parser.add_argument('--min_length', '-min', type=int, default=10, help='min length of the string encoded in qrcode')
     parser.add_argument('--max_length', '-max', type=int, default=25, help='max length of the string encoded in qrcode')
     parser.add_argument('--output_dir', '-o', type=str, required=True, help='Dir to save the result')
-    parser.add_argument('--maxsize', '-s', type=int, default=24, help='qrcode image pixel maxsize')
+    parser.add_argument('--maxsize', '-s', type=int, default=16, help='qrcode image pixel maxsize')
     parser.add_argument('--version', '-v', type=int, default=1, help='version of the qrcode')
     args = parser.parse_args()
     return args
