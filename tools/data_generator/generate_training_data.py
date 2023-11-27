@@ -35,12 +35,13 @@ def get_args():
     parser.add_argument('--size', '-s', type=str, default='(32,120)', help='size range of the qrcode image')
     parser.add_argument('--alpha', '-a', type=str, default='(10,30)', help='value range of the alpha parameter')
     parser.add_argument('--object_number', '-on', type=str, default='(1,5)', help='the number of qrcode image in one background image')
-    parser.add_argument('--shape', type=int, default=256, help='training data shape')
+    parser.add_argument('--shape', type=str, default="(240,320)", help='training data shape')
     parser.add_argument('--debug', type=bool, default=False, help='debug mode')
     args = parser.parse_args()
     args.size = eval(args.size) # string to tuple
     args.alpha = eval(args.alpha)
     args.object_number = eval(args.object_number)
+    args.shape = eval(args.shape)
     return args
 
 
@@ -177,7 +178,7 @@ def generate_training_data(args):
     """
     if not os.path.exists(args.output):
         os.mkdir(args.output)
-    bg_imgs = ImageLists(args.bg_dir, [args.shape] * 2)
+    bg_imgs = ImageLists(args.bg_dir, args.shape)
     fg_imgs = ImageLists(args.fg_dir)
     count = 0
     args.number = len(bg_imgs)

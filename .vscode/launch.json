@@ -1,0 +1,54 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "current file",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+        },
+        {
+            "name": "generate_qrcode",
+            "type": "python",
+            "request": "launch",
+            "program": "./tools/data_generator/generate_qrcode.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "args":[
+                "-o", "./datasets/data/train_data/gen_qrcode"
+            ]
+        },
+        {
+            "name": "generate_training_data",
+            "type": "python",
+            "request": "launch",
+            "program": "./tools/data_generator/generate_training_data.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args":[
+                "--fg_dir",  "./datasets/data/train_data/gen_qrcode",
+                "--bg_dir",  "/data2/user/dwwang3/workspace/github.com/vits_chinese/VOCdevkit/VOC2012/JPEGImages",
+                "--output",  "./datasets/data/train_data/merge",
+                "--number",  "10",
+                "--size",    "(32,120)",
+                "--alpha",   "(10,30)",
+                "--object_number", "(1,2)",
+                "--shape",   "(240, 320)",
+                // parser.add_argument('--fg_dir', '-fg', type=str, help='path to foreground qrcode images')
+                // parser.add_argument('--bg_dir', '-bg', type=str, help='path to background images')
+                // parser.add_argument('--output', '-o', type=str, help='path to save the generated images')
+                // parser.add_argument('--number', '-n', type=int, help='how many images you want to generate')
+                // parser.add_argument('--size', '-s', type=str, default='(32,120)', help='size range of the qrcode image')
+                // parser.add_argument('--alpha', '-a', type=str, default='(10,30)', help='value range of the alpha parameter')
+                // parser.add_argument('--object_number', '-on', type=str, default='(1,5)', help='the number of qrcode image in one background image')
+                // parser.add_argument('--shape', type=int, default=256, help='training data shape')
+            ]
+        }
+    ]
+}
+
