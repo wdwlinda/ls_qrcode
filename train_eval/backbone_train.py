@@ -24,7 +24,8 @@ from torch.optim import lr_scheduler
 from torchsummary import summary
 
 ap = argparse.ArgumentParser()
-ap.add_argument("-i", "--images",    default='/data2/user/dwwang3/workspace/github.com/qrcode/listenai_qrcode/datasets/data/train_data/merge', help="input file path")
+# ap.add_argument("-i", "--images",    default='/data2/user/dwwang3/workspace/github.com/qrcode/listenai_qrcode/datasets/data/train_data/merge', help="input file path")
+ap.add_argument("-i", "--images",    default='/data2/user/dwwang3/workspace/dataset/qrcode_dataset/train_data', help="input file path")
 ap.add_argument("-n", "--epochs",    default=100,  help="epochs for train")
 ap.add_argument("-b", "--batchsize", default=64,  help="batch size for train")
 ap.add_argument("-r", "--resume",    default='./weights/wR2/wR2.pth4', help="file for re-train")
@@ -33,8 +34,8 @@ args = vars(ap.parse_args())
 
 
 import datetime
-import wandb
-wandb.login(key='4ec0396ddf4a239b6fcb4daa9e15710b5cf963cd')
+# import wandb
+# wandb.login(key='4ec0396ddf4a239b6fcb4daa9e15710b5cf963cd')
 # wandb = None
 
 numClasses = 4  
@@ -42,14 +43,6 @@ numClasses = 4
 imgSize = (240, 320)
 
 def train_backbone():
-
-    wandb.init(
-            # set the wandb project where this run will be logged
-            project="vits",
-            config = args,
-            name = 'orginal' + datetime.datetime.now().strftime('%F %T')
-        )
-
     batchSize = int(args["batchsize"])
     modelFolder = 'weights/wR2/'
     storeName = modelFolder + 'wR2.pth'
@@ -132,6 +125,8 @@ def train_backbone():
                 # lossAver.append(loss.data[0])
                 lossAver.append(loss)
 
+                # wandb.log( {"loss": loss } )
+
                 # Zero gradients, perform a backward pass, and update the weights.
                 optimizer.zero_grad()
                 loss.backward()
@@ -139,8 +134,6 @@ def train_backbone():
                 torch.save(model.state_dict(), storeName)
 
             train_bar.desc = "train epoch[{}/{}] loss:{:.3f}".format(epoch + 1, num_epochs, sum(lossAver) / len(lossAver))
-
-            wandb.log( {"lossAver":lossAver, } )
             
             # if i % 5 == 1:
             #     print ('epoch:%s - index:%s - loss:%s' % (epoch, i, sum(lossAver) / len(lossAver)))
@@ -151,8 +144,10 @@ def train_backbone():
         with open(args['writeFile'], 'a') as outF:
             outF.write('Epoch: %s %s %s' % (epoch, sum(lossAver) / len(lossAver), time()-start))
         torch.save(model.state_dict(), storeName + str(epoch))
+        
+        lr = optimizer.param_groups[0]["lr"]
+        # wandb.log({"lr":lr})
 
-        wandb.finish()
 
 
 def eva_backbone():
@@ -160,11 +155,14 @@ def eva_backbone():
     model = wR2_1(numClasses)
     model.to(device)
     model.load_state_dict(torch.load('./weights/wR2/wR2.pth4', map_location='cpu'))
+    # model.load_state_dict(torch.load('./weights/wR2/wR2.pth99', map_location=device))
     model.eval()
 
     # img_org = cv2.imread("./data_set/simple_test/test/01-89_84-231&482_413&539-422&537_242&536_219&475_399&476-0_0_15_11_25_26_26-121-16.jpg")
     # img_org = cv2.imread("./data_set/simple_test/test/01-90_86-222&446_405&507-400&505_225&500_227&442_402&447-0_0_20_0_24_30_26-66-28.jpg") 
-    img_org = cv2.imread("./data_set/simple_test/test/01-90_87-245&456_432&532-445&528_267&529_251&471_429&470-0_0_10_4_28_24_32-54-11.jpg") 
+    # img_org = cv2.imread("./data_set/simple_test/test/01-90_87-245&456_432&532-445&528_267&529_251&471_429&470-0_0_10_4_28_24_32-54-11.jpg") 
+    img_org = cv2.imread("/data2/user/dwwang3/workspace/dataset/qrcode_dataset/train_data/000001.jpg") 
+
     # img_org = cv2.imread("./data_set/simple_test/test/2.jpg")  
 
     org_h, org_w= img_org.shape[0], img_org.shape[1],
@@ -198,5 +196,12 @@ def eva_backbone():
     # new_labels = [(leftUp[0] + rightDown[0])/(2*ori_w), (leftUp[1] + rightDown[1])/(2*ori_h), (rightDown[0]-leftUp[0])/ori_w, (rightDown[1]-leftUp[1])/ori_h]
 
 if __name__ == '__main__':
-    train_backbone()
-    # eva_backbone()
+    # wandb.init(
+    #     # set the wandb project where this run will be logged
+    #     project="vits",
+    #     config = args,
+    #     name = 'qrcode backbone' + datetime.datetime.now().strftime('%F %T')
+    # )
+    # train_backbone()
+    # wandb.finish()
+    eva_backbone()

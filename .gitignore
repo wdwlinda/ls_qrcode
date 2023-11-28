@@ -3,6 +3,7 @@
 
 
 data_set
+wandb
 **/*.jpg
 **/*.pth*
 **/*.ckpt*

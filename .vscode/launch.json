@@ -33,8 +33,8 @@
             "args":[
                 "--fg_dir",  "./datasets/data/train_data/gen_qrcode",
                 "--bg_dir",  "/data2/user/dwwang3/workspace/github.com/vits_chinese/VOCdevkit/VOC2012/JPEGImages",
-                "--output",  "./datasets/data/train_data/merge",
-                "--number",  "10",
+                "--output",  "/data2/user/dwwang3/workspace/dataset/qrcode_dataset/train_data",
+                "--number",  "200000",
                 "--size",    "(32,120)",
                 "--alpha",   "(10,30)",
                 "--object_number", "(1,2)",

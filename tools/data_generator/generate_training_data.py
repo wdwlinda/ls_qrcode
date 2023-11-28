@@ -180,15 +180,16 @@ def generate_training_data(args):
         os.mkdir(args.output)
     bg_imgs = ImageLists(args.bg_dir, args.shape)
     fg_imgs = ImageLists(args.fg_dir)
+    bg_imgs_num = len(bg_imgs)
     count = 0
-    args.number = len(bg_imgs)
+    # args.number = len(bg_imgs)
     with tqdm.tqdm(total=args.number) as pbar:
         pbar.set_description('Generating {}/{} sample'.format(count, args.number))
         while True:
             if count >= args.number:
                 break
             # get ackground image
-            bg_img = bg_imgs[count]
+            bg_img = bg_imgs[np.random.randint(low=0, high=bg_imgs_num)]
             exist_bbox = []
             labels = []
             for i in range(np.random.randint(args.object_number[0], args.object_number[1])):
